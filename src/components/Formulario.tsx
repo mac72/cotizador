@@ -1,6 +1,10 @@
 // @flow
 import React, {useState} from 'react';
 import styled from '@emotion/styled';
+<<<<<<< Updated upstream
+=======
+import {getDifYear} from '../helper';
+>>>>>>> Stashed changes
 
 export interface IFormularioProps {
 
@@ -8,7 +12,11 @@ export interface IFormularioProps {
 
 interface Iseguro{
   marca: string,
+<<<<<<< Updated upstream
   year : number | string,
+=======
+  year : string,
+>>>>>>> Stashed changes
   plan : string
 }
 const Campo = styled.div `
@@ -51,6 +59,18 @@ const Button = styled.button `
   }
 `;
 
+<<<<<<< Updated upstream
+=======
+const Error = styled.div `
+  background-color: red;
+  color : white;
+  padding: 1rem;
+  width:100%;
+  text-align: center;
+  margin-bottom:2rem;
+`;
+
+>>>>>>> Stashed changes
 function setYears(){
 
   let fecha = new Date();
@@ -73,6 +93,11 @@ const Formulario = (prosp:IFormularioProps) : JSX.Element => {
     plan : ''
   });
 
+<<<<<<< Updated upstream
+=======
+  const [error, guardarError] = useState<boolean>(false)
+
+>>>>>>> Stashed changes
   //extrae los valores del state
   const {marca, year, plan } = datos;
 
@@ -80,15 +105,58 @@ const Formulario = (prosp:IFormularioProps) : JSX.Element => {
 
   const obtenerInformacion = (e:React.ChangeEvent) =>{
     const elemento = e.target as HTMLFormElement;
+<<<<<<< Updated upstream
     console.log(elemento)
+=======
+>>>>>>> Stashed changes
     guardarDatos({
       ...datos,
       [elemento.name] : elemento.value
     })
   }
+<<<<<<< Updated upstream
 
   return (
     <form>
+=======
+  //cuando el usuario presiona submit
+  const cotizarSeguro = (e:React.FormEvent) =>{
+    e.preventDefault();
+    if(marca.trim() === '' || year.trim() === '' || plan.trim() === ''){
+      guardarError(true);
+      return;
+    }
+    guardarError(false);
+
+    //una base de 2000
+
+    let resultado = 2000;
+    //obtener la diferencia de años
+
+    const diferencia = getDifYear(Number(year));
+
+    //por cada año hay que restar el 3%
+
+    resultado -=(0.03 * resultado * diferencia);
+
+    console.log(resultado);
+
+    //americano 15%
+    if(marca ==='Americano'){
+      resultado *= 1.15;
+    }
+
+    //Asiatico 5%
+    //Europeo 30%
+  }
+
+
+  return (
+    <form
+      onSubmit={(e):void => cotizarSeguro(e)}
+    >
+      {error ? <Error>Todos los campos son obligatorios</Error>: null}
+>>>>>>> Stashed changes
       <Campo>
         <Label>Marca</Label>
         <Select
@@ -130,7 +198,11 @@ const Formulario = (prosp:IFormularioProps) : JSX.Element => {
           onChange= {(e): void => obtenerInformacion(e)}
         />Completo
       </Campo>
+<<<<<<< Updated upstream
       <Button type = "button">Cotizar</Button>
+=======
+      <Button type = "submit">Cotizar</Button>
+>>>>>>> Stashed changes
     </form>
   );
 }
