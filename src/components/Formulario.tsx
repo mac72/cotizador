@@ -1,22 +1,15 @@
-// @flow
 import React, {useState} from 'react';
 import styled from '@emotion/styled';
-<<<<<<< Updated upstream
-=======
-import {getDifYear} from '../helper';
->>>>>>> Stashed changes
+import {getDifYear,calcularMarca, getPlan} from '../helper';
 
-export interface IFormularioProps {
-
+interface IFormularioProps {
+  guardarResumen : Function,
+  setCargando : Function,
 }
 
-interface Iseguro{
+export interface Iseguro{
   marca: string,
-<<<<<<< Updated upstream
-  year : number | string,
-=======
   year : string,
->>>>>>> Stashed changes
   plan : string
 }
 const Campo = styled.div `
@@ -27,7 +20,6 @@ const Campo = styled.div `
 
 const Label = styled.label `
   flex: 0 0 100px;
-
 `;
 const Select = styled.select `
   display: block;
@@ -59,8 +51,6 @@ const Button = styled.button `
   }
 `;
 
-<<<<<<< Updated upstream
-=======
 const Error = styled.div `
   background-color: red;
   color : white;
@@ -70,7 +60,6 @@ const Error = styled.div `
   margin-bottom:2rem;
 `;
 
->>>>>>> Stashed changes
 function setYears(){
 
   let fecha = new Date();
@@ -81,11 +70,11 @@ function setYears(){
     years.push(i);
   }
   return(
-    years.map(year => <option value={year}>{year}</option>)
+    years.map(year => <option value={year} key={year}>{year}</option>)
   );
 
 }
-const Formulario = (prosp:IFormularioProps) : JSX.Element => {
+const Formulario = ({guardarResumen, setCargando}:IFormularioProps) : JSX.Element => {
 
   const[datos,guardarDatos]= useState<Iseguro>({
     marca: '',
@@ -93,11 +82,8 @@ const Formulario = (prosp:IFormularioProps) : JSX.Element => {
     plan : ''
   });
 
-<<<<<<< Updated upstream
-=======
   const [error, guardarError] = useState<boolean>(false)
 
->>>>>>> Stashed changes
   //extrae los valores del state
   const {marca, year, plan } = datos;
 
@@ -105,20 +91,11 @@ const Formulario = (prosp:IFormularioProps) : JSX.Element => {
 
   const obtenerInformacion = (e:React.ChangeEvent) =>{
     const elemento = e.target as HTMLFormElement;
-<<<<<<< Updated upstream
-    console.log(elemento)
-=======
->>>>>>> Stashed changes
     guardarDatos({
       ...datos,
       [elemento.name] : elemento.value
     })
   }
-<<<<<<< Updated upstream
-
-  return (
-    <form>
-=======
   //cuando el usuario presiona submit
   const cotizarSeguro = (e:React.FormEvent) =>{
     e.preventDefault();
@@ -127,36 +104,32 @@ const Formulario = (prosp:IFormularioProps) : JSX.Element => {
       return;
     }
     guardarError(false);
-
     //una base de 2000
-
     let resultado = 2000;
     //obtener la diferencia de años
-
     const diferencia = getDifYear(Number(year));
-
     //por cada año hay que restar el 3%
-
     resultado -=(0.03 * resultado * diferencia);
+    //americano 15% Asiatico 5% Europeo 30%
+    resultado *= calcularMarca(marca);
+    //basico 20% completo 50%
+    resultado *= getPlan(plan);
 
-    console.log(resultado);
-
-    //americano 15%
-    if(marca ==='Americano'){
-      resultado *= 1.15;
-    }
-
-    //Asiatico 5%
-    //Europeo 30%
+    setCargando(true);
+    setTimeout(()=>{
+      setCargando(false);
+      guardarResumen({
+        cotizacion: parseFloat(String(resultado)).toFixed(2),
+        datos
+      })
+    },1500)
   }
-
 
   return (
     <form
       onSubmit={(e):void => cotizarSeguro(e)}
     >
       {error ? <Error>Todos los campos son obligatorios</Error>: null}
->>>>>>> Stashed changes
       <Campo>
         <Label>Marca</Label>
         <Select
@@ -198,11 +171,7 @@ const Formulario = (prosp:IFormularioProps) : JSX.Element => {
           onChange= {(e): void => obtenerInformacion(e)}
         />Completo
       </Campo>
-<<<<<<< Updated upstream
-      <Button type = "button">Cotizar</Button>
-=======
       <Button type = "submit">Cotizar</Button>
->>>>>>> Stashed changes
     </form>
   );
 }
